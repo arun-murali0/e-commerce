@@ -1,21 +1,22 @@
 import mongoose from 'mongoose';
+import { Config } from '../../config/index';
 
-const userDetails = new mongoose.Schema({
-	firstName: {
-		type: String,
-	},
-	lastName: {
-		type: String,
-	},
-	email: {
-		type: String,
-		require: true,
-		unique: true,
-	},
-	password: {
-		type: String,
-		require: true,
-	},
+// database connection
+export const databaseConnection = async () => {
+	try {
+		const newConnection = await mongoose.connect(Config.MONGO_STRING!);
+		if (newConnection) {
+			console.info('database connected');
+		}
+	} catch (error) {
+		console.error({ error: { error } });
+		process.exit(1);
+	}
+};
+
+// shutdown gracefully
+process.on('SIGINT', async () => {
+	console.info('shutdown gracefully');
+	await mongoose.disconnect();
+	process.exit(0);
 });
-
-export const User = mongoose.model('User', userDetails);

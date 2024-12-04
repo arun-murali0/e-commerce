@@ -1,6 +1,9 @@
 import express from 'express';
+import { databaseConnection } from './Infrastracture-layer/DB/db';
 
-export const app = express();
+const app = express();
 
+// database connection
+databaseConnection();
 
-
+export { app };
